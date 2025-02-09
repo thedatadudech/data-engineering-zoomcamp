@@ -5,19 +5,19 @@ from google.cloud import storage
 import time
 
 
-#Change this to your bucket name
-BUCKET_NAME = "dezoomcamp_hw3_2025"  
+# Change this to your bucket name
+BUCKET_NAME = "dezoomcamp_hw3_2025_mcl"
 
-#If you authenticated through the GCP SDK you can comment out these two lines
-CREDENTIALS_FILE = "gcs.json"  
+# If you authenticated through the GCP SDK you can comment out these two lines
+CREDENTIALS_FILE = "gcs.json"
 client = storage.Client.from_service_account_json(CREDENTIALS_FILE)
 
 
 BASE_URL = "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2024-"
-MONTHS = [f"{i:02d}" for i in range(1, 7)] 
+MONTHS = [f"{i:02d}" for i in range(1, 7)]
 DOWNLOAD_DIR = "."
 
-CHUNK_SIZE = 8 * 1024 * 1024  
+CHUNK_SIZE = 8 * 1024 * 1024
 
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
@@ -45,14 +45,14 @@ def verify_gcs_upload(blob_name):
 def upload_to_gcs(file_path, max_retries=3):
     blob_name = os.path.basename(file_path)
     blob = bucket.blob(blob_name)
-    blob.chunk_size = CHUNK_SIZE  
-    
+    blob.chunk_size = CHUNK_SIZE
+
     for attempt in range(max_retries):
         try:
             print(f"Uploading {file_path} to {BUCKET_NAME} (Attempt {attempt + 1})...")
             blob.upload_from_filename(file_path)
             print(f"Uploaded: gs://{BUCKET_NAME}/{blob_name}")
-            
+
             if verify_gcs_upload(blob_name):
                 print(f"Verification successful for {blob_name}")
                 return
@@ -60,9 +60,9 @@ def upload_to_gcs(file_path, max_retries=3):
                 print(f"Verification failed for {blob_name}, retrying...")
         except Exception as e:
             print(f"Failed to upload {file_path} to GCS: {e}")
-        
-        time.sleep(5)  
-    
+
+        time.sleep(5)
+
     print(f"Giving up on {file_path} after {max_retries} attempts.")
 
 
