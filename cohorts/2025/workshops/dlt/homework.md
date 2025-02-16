@@ -1,5 +1,5 @@
 Original file is located at
-    https://colab.research.google.com/drive/1plqdl33K_HkVx0E0nGJrrkEUssStQsW7
+https://colab.research.google.com/drive/1plqdl33K_HkVx0E0nGJrrkEUssStQsW7
 
 # **Workshop "Data Ingestion with dlt": Homework**
 
@@ -9,10 +9,12 @@ Original file is located at
 
 We’ll use **NYC Taxi data** via the same custom API from the workshop:
 
-🔹 **Base API URL:**  
+🔹 **Base API URL:**
+
 ```
 https://us-central1-dlthub-analytics.cloudfunctions.net/data_engineering_zoomcamp_api
 ```
+
 🔹 **Data format:** Paginated JSON (1,000 records per page).  
 🔹 **API Pagination:** Stop when an empty page is returned.
 
@@ -40,7 +42,7 @@ print("dlt version:", dlt.__version__)
 ```
 
 **Answer**:  
-- Provide the **version** you see in the output.
+Version 1.6.1
 
 ## **Question 2: Define & Run the Pipeline (NYC Taxi API)**
 
@@ -59,22 +61,36 @@ import dlt
 from dlt.sources.helpers.rest_client import RESTClient
 from dlt.sources.helpers.rest_client.paginators import PageNumberPaginator
 
+# API base URL
+API_URL = "https://us-central1-dlthub-analytics.cloudfunctions.net/data_engineering_zoomcamp_api"
 
-# your code is here
+@dlt.resource(name="rides")
+def nyc_taxi():
+    client = RESTClient(base_url=API_URL, paginator=PageNumberPaginator(base_page=1, total_path=None))
 
+    for page in client.paginate():
+        if not page:  # Stop if the page is empty
+            break
+        yield page
 
+# Create and run the pipeline
 pipeline = dlt.pipeline(
-    pipeline_name="ny_taxi_pipeline",
+    pipeline_name="nyc_taxi_pipeline",
     destination="duckdb",
-    dataset_name="ny_taxi_data"
+    dataset_name="nyc_taxi_data"
 )
+
+
+
 ```
 
 Load the data into DuckDB to test:
+
 ```py
 load_info = pipeline.run(ny_taxi)
 print(load_info)
 ```
+
 Start a connection to your database using native `duckdb` connection and look what tables were generated:"""
 
 ```py
@@ -91,12 +107,15 @@ conn = duckdb.connect(f"{pipeline.pipeline_name}.duckdb")
 conn.sql(f"SET search_path = '{pipeline.dataset_name}'")
 
 # Describe the dataset
-conn.sql("DESCRIBE").df()
+tables = conn.execute("SHOW TABLES").fetchall()
+print("Tables in DuckDB:", tables)
 
 ```
 
 **Answer:**
-* How many tables were created?
+
+- How many tables were created?
+  4
 
 ## **Question 3: Explore the loaded data**
 
@@ -104,17 +123,20 @@ Inspect the table `ride`:
 
 ```py
 df = pipeline.dataset(dataset_type="default").rides.df()
-df
+print("Total records extracted:", len(df))
+df.head()
 ```
 
 **Answer:**
-* What is the total number of records extracted?
+
+- What is the total number of records extracted?
+  10000
 
 ## **Question 4: Trip Duration Analysis**
 
 Run the SQL query below to:
 
-* Calculate the average trip duration in minutes.
+- Calculate the average trip duration in minutes.
 
 ```py
 with pipeline.sql_client() as client:
@@ -130,11 +152,13 @@ with pipeline.sql_client() as client:
 ```
 
 **Answer:**
-* What is the average trip duration?
+
+- What is the average trip duration?
+  [(12.3049,)]
 
 ## **Submitting the solutions**
 
-* Form for submitting: TBA
+- Form for submitting: TBA
 
 ## **Solution**
 
