@@ -30,7 +30,7 @@ def create_events_source_kafka(t_env):
             test_data INTEGER,
             event_timestamp BIGINT,
             event_watermark AS TO_TIMESTAMP_LTZ(event_timestamp, 3),
-            WATERMARK for event_watermark as event_watermark - INTERVAL '1' SECOND
+            WATERMARK for event_watermark as event_watermark - INTERVAL '3' HOURS
         ) WITH (
             'connector' = 'kafka',
             'properties.bootstrap.servers' = 'redpanda-1:29092',

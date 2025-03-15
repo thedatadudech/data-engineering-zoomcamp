@@ -1,0 +1,22 @@
+CREATE TABLE taxi_events_sink (
+    VendorID INTEGER,
+    lpep_pickup_datetime TIMESTAMP,
+    lpep_dropoff_datetime TIMESTAMP,
+    store_and_fwd_flag TEXT,
+    RatecodeID INTEGER,
+    PULocationID INTEGER,
+    DOLocationID INTEGER,
+    passenger_count INTEGER,
+    trip_distance DOUBLE PRECISION,
+    fare_amount DOUBLE PRECISION,
+    extra DOUBLE PRECISION,
+    mta_tax DOUBLE PRECISION,
+    tip_amount DOUBLE PRECISION,
+    tolls_amount DOUBLE PRECISION,
+    ehail_fee DOUBLE PRECISION,
+    improvement_surcharge DOUBLE PRECISION,
+    total_amount DOUBLE PRECISION,
+    payment_type INTEGER,
+    trip_type INTEGER,
+    congestion_surcharge DOUBLE PRECISION
+);
