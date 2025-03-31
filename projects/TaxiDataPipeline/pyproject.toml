@@ -1,0 +1,20 @@
+[project]
+name = "repl-nix-workspace"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.11"
+dependencies = [
+    "db-dtypes>=1.4.2",
+    "folium>=0.19.5",
+    "google-auth>=2.38.0",
+    "google-cloud-bigquery>=3.0.0",
+    "pandas>=2.0.0",
+    "streamlit-folium>=0.24.0",
+    "streamlit>=1.43.2",
+    "plotly>=5.0.0",
+    "sift-stack-py>=0.4.2",
+    "google-cloud-storage>=2.10.0",
+    "requests>=2.32.3",
+    "google-api-core>=2.24.2",
+    "trafilatura>=2.0.0",
+]
